@@ -7,6 +7,18 @@ pipeline {
     }
   }
   stages {
+    stage('JDK 11 Build & Test') {
+      steps {
+        container('maven-container-jdk-11') {
+          sh 'mvn -B clean package'
+        }
+      }
+      post {
+        always {
+          junit '**/*.xml'
+        }
+      }
+    }
     stage('Build') {
       steps {
         sh 'mvn -B -DskipTests clean package'
@@ -17,7 +29,7 @@ pipeline {
         sh 'mvn test'
       }
       post {
-        always { 
+        always {
           junit '**/*.xml'
         }
       }
